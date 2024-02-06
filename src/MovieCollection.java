@@ -165,7 +165,107 @@ public class MovieCollection
   
   private void searchCast()
   {
+    System.out.print("Enter an actor: ");
+    String searchTerm = scanner.nextLine();
 
+    // prevent case sensitivity
+    searchTerm = searchTerm.toLowerCase();
+
+    ArrayList<String> results = new ArrayList<String>();
+    ArrayList<String> matchingResults = new ArrayList<String>();
+
+    for (int i = 0; i < movies.size(); i++)
+    {
+      String movieActors[] = movies.get(i).getCast().split("\\|");
+      for (int j = 0; j < movieActors.length; j++) {
+        if (movieActors[j].toLowerCase().indexOf(searchTerm) != -1) {
+          boolean found = false;
+          for (int k = 0; k < matchingResults.size(); k++) {
+            if (matchingResults.get(k).equals(movieActors[j])) {
+              found = true;
+            }
+          }
+          if (!found) {
+            matchingResults.add(movieActors[j]);
+          }
+        }
+      }
+    }
+
+    for (int j = 1; j < matchingResults.size(); j++)
+    {
+      String temp = matchingResults.get(j);
+
+      int possibleIndex = j;
+      while (possibleIndex > 0 && temp.compareTo(matchingResults.get(possibleIndex - 1)) < 0)
+      {
+        matchingResults.set(possibleIndex, matchingResults.get(possibleIndex - 1));
+        possibleIndex--;
+      }
+      matchingResults.set(possibleIndex, temp);
+    }
+
+    // now, display them all to the user
+    for (int i = 0; i < matchingResults.size(); i++)
+    {
+      String actor = matchingResults.get(i);
+
+      // this will print index 0 as choice 1 in the results list; better for user!
+      int choiceNum = i + 1;
+
+      System.out.println("" + choiceNum + ". " + actor);
+    }
+
+    System.out.println("Which movie would you like to learn more about?");
+    System.out.print("Enter number: ");
+
+    int choice = scanner.nextInt();
+    scanner.nextLine();
+
+    String selectedActor = matchingResults.get(choice - 1);
+    selectedActor = selectedActor.toLowerCase();
+
+    ArrayList<Movie> movieResults = new ArrayList<Movie>();
+
+    for (int i = 0; i < movies.size(); i++)
+    {
+      String movieActors[] = movies.get(i).getCast().split("\\|");
+      boolean isInMovie = false;
+      for (int j = 0; j < movieActors.length; j++) {
+        if (movieActors[j].toLowerCase().equals(selectedActor)) {
+          isInMovie = true;
+        }
+      }
+      if (isInMovie) {
+        movieResults.add(movies.get(i));
+      }
+    }
+
+    sortResults(movieResults);
+
+    // now, display them all to the user
+    for (int i = 0; i < movieResults.size(); i++)
+    {
+      String title = movieResults.get(i).getTitle();
+
+      // this will print index 0 as choice 1 in the results list; better for user!
+      int choiceNum = i + 1;
+
+      System.out.println("" + choiceNum + ". " + title);
+    }
+
+    System.out.println("Which movie would you like to learn more about?");
+    System.out.print("Enter number: ");
+
+    choice = scanner.nextInt();
+    scanner.nextLine();
+
+    Movie selectedMovie = movieResults.get(choice - 1);
+
+    displayMovieInfo(selectedMovie);
+
+    System.out.println("\n ** Press Enter to Return to Main Menu **");
+    scanner.nextLine();
   }
 
   private void searchKeywords()
