@@ -420,7 +420,53 @@ public class MovieCollection
   
   private void listHighestRated()
   {
-  
+    double highest = 0;
+    Movie[] top50Rated = new Movie[50];
+    String[] placedMovieTitles = new String[50];
+    for (int i = 0; i < placedMovieTitles.length; i++) {
+      placedMovieTitles[i] = "";
+    }
+
+    for (int i = 0; i < top50Rated.length; i++) {
+      int highestIndex = 0;
+      for (int j = 0; j < movies.size(); j++) {
+        // might need previousHighest variable
+        highest = 0;
+        if (movies.get(j).getUserRating() > highest) {
+          for (int k = 0; k < placedMovieTitles.length; k++) {
+            if (!placedMovieTitles[k].equals(movies.get(j).getTitle())) {
+              highestIndex = j;
+              highest = movies.get(j).getUserRating();
+              placedMovieTitles[k] = movies.get(j).getTitle();
+            }
+          }
+        }
+      }
+      top50Rated[i] = movies.get(highestIndex);
+    }
+
+    for (int i = 0; i < top50Rated.length; i++)
+    {
+      String title = top50Rated[i].getTitle();
+
+      // this will print index 0 as choice 1 in the results list; better for user!
+      int choiceNum = i + 1;
+
+      System.out.println("" + choiceNum + ". " + title + ": " + top50Rated[i].getUserRating());
+    }
+
+    System.out.println("Which movie would you like to learn more about?");
+    System.out.print("Enter number: ");
+
+    int choice = scanner.nextInt();
+    scanner.nextLine();
+
+    Movie selectedMovie = top50Rated[choice - 1];
+
+    displayMovieInfo(selectedMovie);
+
+    System.out.println("\n ** Press Enter to Return to Main Menu **");
+    scanner.nextLine();
   }
   
   private void listHighestRevenue()
