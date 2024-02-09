@@ -428,21 +428,32 @@ public class MovieCollection
     }
 
     for (int i = 0; i < top50Rated.length; i++) {
+      int placedMovieIndex = 0;
+      highest = 0;
       int highestIndex = 0;
       for (int j = 0; j < movies.size(); j++) {
-        // might need previousHighest variable
-        highest = 0;
-        if (movies.get(j).getUserRating() > highest) {
+        if (movies.get(j).getUserRating() >= highest) {
+          boolean found = false;
           for (int k = 0; k < placedMovieTitles.length; k++) {
-            if (!placedMovieTitles[k].equals(movies.get(j).getTitle())) {
-              highestIndex = j;
-              highest = movies.get(j).getUserRating();
-              placedMovieTitles[k] = movies.get(j).getTitle();
+            if (placedMovieTitles[k].equals(movies.get(j).getTitle())) {
+              found = true;
+              break;
             }
+          }
+          if (!found) {
+            for (int l = 0; l < placedMovieTitles.length; l++) {
+              if (placedMovieTitles[l].equals("")) {
+                placedMovieIndex = l;
+                break;
+              }
+            }
+            highest = movies.get(j).getUserRating();
+            highestIndex = j;
           }
         }
       }
       top50Rated[i] = movies.get(highestIndex);
+      placedMovieTitles[placedMovieIndex] = movies.get(highestIndex).getTitle();
     }
 
     for (int i = 0; i < top50Rated.length; i++)
