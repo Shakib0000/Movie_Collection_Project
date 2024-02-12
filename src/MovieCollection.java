@@ -482,7 +482,64 @@ public class MovieCollection
   
   private void listHighestRevenue()
   {
-  
+    double highest = 0;
+    Movie[] top50Revenue = new Movie[50];
+    String[] placedMovieTitles = new String[50];
+    for (int i = 0; i < placedMovieTitles.length; i++) {
+      placedMovieTitles[i] = "";
+    }
+
+    for (int i = 0; i < top50Revenue.length; i++) {
+      int placedMovieIndex = 0;
+      highest = 0;
+      int highestIndex = 0;
+      for (int j = 0; j < movies.size(); j++) {
+        if (movies.get(j).getRevenue() >= highest) {
+          boolean found = false;
+          for (int k = 0; k < placedMovieTitles.length; k++) {
+            if (placedMovieTitles[k].equals(movies.get(j).getTitle())) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            for (int l = 0; l < placedMovieTitles.length; l++) {
+              if (placedMovieTitles[l].equals("")) {
+                placedMovieIndex = l;
+                break;
+              }
+            }
+            highest = movies.get(j).getRevenue();
+            highestIndex = j;
+          }
+        }
+      }
+      top50Revenue[i] = movies.get(highestIndex);
+      placedMovieTitles[placedMovieIndex] = movies.get(highestIndex).getTitle();
+    }
+
+    for (int i = 0; i < top50Revenue.length; i++)
+    {
+      String title = top50Revenue[i].getTitle();
+
+      // this will print index 0 as choice 1 in the results list; better for user!
+      int choiceNum = i + 1;
+
+      System.out.println("" + choiceNum + ". " + title + ": " + top50Revenue[i].getRevenue());
+    }
+
+    System.out.println("Which movie would you like to learn more about?");
+    System.out.print("Enter number: ");
+
+    int choice = scanner.nextInt();
+    scanner.nextLine();
+
+    Movie selectedMovie = top50Revenue[choice - 1];
+
+    displayMovieInfo(selectedMovie);
+
+    System.out.println("\n ** Press Enter to Return to Main Menu **");
+    scanner.nextLine();
   }
   
   private void importMovieList(String fileName)
